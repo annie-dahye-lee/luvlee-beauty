@@ -4,18 +4,21 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Im
 import './App.css';
 import HeroSection from './components/HeroSection';
 import Home from './components/pages/Home';
+import Analyze from './components/pages/Analyze'; // Check the path is correct
+import About from './components/pages/About';
+import SignUp from './components/pages/SignUp';
 
 function App() {
   return (
-    <Router> {/* Wrap your entire app inside Router */}
+    <Router>
       <Navbar />
-      <Routes>
-        {/* Use element instead of component */}
-        <Route path='/' element={<Home />} />
-      </Routes>
 
-      {/* You can place the HeroSection here to display on every route */}
-    
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/analyze' element={<Analyze />} />
+        <Route path='/about' element={<About />} />
+        <Route path='/sign-up' element={<SignUp />} />
+      </Routes>
     </Router>
   );
 }

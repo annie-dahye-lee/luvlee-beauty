@@ -1,0 +1,56 @@
+.about-container {
+    padding: 2.5rem; /* Increased padding for a more spacious layout */
+    background: #fff; /* Clean white background for sophistication */
+    border-radius: 20px; /* More pronounced rounded corners */
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15); /* Deeper shadow for a more elegant feel */
+    max-width: 700px; /* Increased max-width for better readability */
+    margin: 40px auto; /* Center the container with more space around */
+    text-align: center; /* Center-align text */
+    font-family: 'Poppins', sans-serif; /* Use a clean, modern font */
+}
+
+.about-title {
+    color: #d5006d; /* Rich pink for elegance */
+    font-size: 2.8rem; /* Slightly larger font size for emphasis */
+    font-family: 'Dancing Script', cursive; /* A charming, stylish font */
+    margin-bottom: 1.5rem; /* Increased margin for better spacing */
+}
+
+.about-subtitle {
+    color: #c2185b; /* Deep magenta for sophistication */
+    font-size: 2.2rem; /* Slightly larger size for better visibility */
+    margin: 1.5rem 0; /* Space around subtitle */
+    font-family: 'Poppins', sans-serif; /* A modern font */
+}
+
+.about-description {
+    color: #333; /* Darker text for better readability */
+    font-size: 1.25rem; /* Increased font size for readability */
+    line-height: 1.6; /* Slightly increased line height for readability */
+    margin-bottom: 2rem; /* Increased margin for better spacing */
+}
+
+.about-features {
+    display: grid; /* Use grid layout for features */
+    gap: 1.5rem; /* Space between feature cards */
+}
+
+.about-feature {
+    display: flex; /* Flex layout for each feature */
+    align-items: center; /* Center items vertically */
+    padding: 1rem; /* Padding around feature cards */
+    background: #f9f3f3; /* Light background for features */
+    border-radius: 10px; /* Rounded corners for feature cards */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.feature-icon {
+    font-size: 2rem; /* Size of the emoji */
+    margin-right: 1rem; /* Space between emoji and text */
+}
+
+.feature-text {
+    color: #555; /* Text color */
+    font-size: 1.1rem; /* Font size for feature text */
+    line-height: 1.4; /* Line height for readability */
+}
