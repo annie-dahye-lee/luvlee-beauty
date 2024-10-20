@@ -1,0 +1,54 @@
+.analyze-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 80px);
+    width: 100%;
+    padding-top: 80px;
+    position: relative; /* For absolute positioning of child elements */
+  }
+  
+  .media-container {
+    position: relative; /* For absolute positioning of webcam and image */
+    width: 400px; /* Set a fixed width for the media container */
+    height: 300px; /* Set a fixed height for the media container */
+    overflow: hidden; /* Hide overflow to prevent any visual shift */
+    margin-bottom: 20px; /* Space between media and buttons */
+  }
+  
+  .webcam-feed, .captured-image {
+    position: absolute; /* Position them absolutely */
+    top: 0; /* Align to the top */
+    left: 0; /* Align to the left */
+    width: 100%; /* Fill the container */
+    height: 100%; /* Fill the container */
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .hidden {
+    display: none; /* Hide the webcam feed when capturing an image */
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px; /* Space above buttons */
+  }
+  
+  .capture-button,
+  .reset-button {
+    padding: 10px 30px;
+    font-size: 16px;
+    background-color: #ff69b4; /* Pink theme */
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+  }
+  

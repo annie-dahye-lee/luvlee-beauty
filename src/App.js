@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Im
 import './App.css';
 import HeroSection from './components/HeroSection';
 import Home from './components/pages/Home';
-import Analyze from './components/pages/Analyze'; // Check the path is correct
+import Analyze from './components/pages/Analyze/Analyze'; // Check the path is correct
 import About from './components/pages/About';
 import SignUp from './components/pages/SignUp';
 
