@@ -31,10 +31,16 @@ const Analyze = () => {
           screenshotFormat="image/jpeg"
           videoConstraints={videoConstraints}
           className={`webcam-feed ${capturedImage ? 'hidden' : ''}`} // Hide when image is captured
+          style={{ transform: 'scale(-1, 1)' }} // Mirror the webcam feed horizontally
         />
         {/* Captured Image */}
         {capturedImage && (
-          <img src={capturedImage} alt="Captured" className="captured-image" />
+          <img
+            src={capturedImage}
+            alt="Captured"
+            className="captured-image"
+            style={{ transform: 'scale(-1, 1)' }} // Mirror the captured image
+          />
         )}
       </div>
       <div className="button-container">
