@@ -45,11 +45,11 @@ const Analyze = () => {
           ref={webcamRef}
           screenshotFormat="image/jpeg"
           videoConstraints={videoConstraints}
-          className={`webcam-feed ${capturedImage ? 'hidden' : ''}`} // Hide when image is captured
+          className={`webcam-feed ${capturedImage ? 'hidden' : 'mirrored'}`} // Add mirrored class
         />
         {/* Captured Image */}
         {capturedImage && (
-          <img src={capturedImage} alt="Captured" className="captured-image" />
+          <img src={capturedImage} alt="Captured" className={`captured-image mirrored`} /> // Add mirrored class
         )}
       </div>
       <div className="button-container">
