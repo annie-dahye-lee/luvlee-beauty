@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Webcam from 'react-webcam';
 import './Analyze.css';
 
@@ -21,9 +21,24 @@ const Analyze = () => {
     setCapturedImage(null); // Reset the captured image
   };
 
+  // Ensure that webcam permissions are handled
+  useEffect(() => {
+    const checkWebcam = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        console.log("Webcam access granted");
+      } catch (error) {
+        console.error("Error accessing webcam:", error);
+        alert("Please allow webcam access to use this feature.");
+      }
+    };
+
+    checkWebcam();
+  }, []);
+
   return (
     <div className="analyze-container">
-      <div className="media-container"> {/* Container for webcam and image */}
+      <div className="media-container">
         {/* Webcam Feed */}
         <Webcam
           audio={false}
@@ -31,16 +46,10 @@ const Analyze = () => {
           screenshotFormat="image/jpeg"
           videoConstraints={videoConstraints}
           className={`webcam-feed ${capturedImage ? 'hidden' : ''}`} // Hide when image is captured
-          style={{ transform: 'scale(-1, 1)' }} // Mirror the webcam feed horizontally
         />
         {/* Captured Image */}
         {capturedImage && (
-          <img
-            src={capturedImage}
-            alt="Captured"
-            className="captured-image"
-            style={{ transform: 'scale(-1, 1)' }} // Mirror the captured image
-          />
+          <img src={capturedImage} alt="Captured" className="captured-image" />
         )}
       </div>
       <div className="button-container">
