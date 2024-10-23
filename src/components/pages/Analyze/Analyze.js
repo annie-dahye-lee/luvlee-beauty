@@ -1,12 +1,14 @@
 import React, { useRef, useState, useEffect } from 'react';
 import Webcam from 'react-webcam';
-import * as faceapi from 'face-api.js'; // Import face-api.js
+import * as faceapi from 'face-api.js';
 import './Analyze.css';
 
 const Analyze = () => {
   const webcamRef = useRef(null);
   const [capturedImage, setCapturedImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const canvasRef = useRef(null); // Canvas for face detection on the captured image
+  const liveCanvasRef = useRef(null); // Canvas for face detection on the live webcam feed
 
   const videoConstraints = {
     width: 400,
@@ -22,53 +24,78 @@ const Analyze = () => {
     setIsLoading(false);
   };
 
+  // Capture the image from the webcam
   const capture = async () => {
-    const imageSrc = webcamRef.current.getScreenshot(); // Capture image
-    console.log('Captured image source:', imageSrc); // Debugging line
-    setCapturedImage(imageSrc); // Store captured image in state
-    await analyzeFace(imageSrc); // Call the face analysis function
+    const imageSrc = webcamRef.current.getScreenshot();
+    setCapturedImage(imageSrc);
+    await analyzeFace(imageSrc);
   };
 
+  // Reset the captured image and clear the canvas
   const resetCapture = () => {
-    console.log('Resetting capture'); // Debugging line
-    setCapturedImage(null); // Reset the captured image
+    setCapturedImage(null);
+    const canvas = canvasRef.current;
+    const context = canvas.getContext('2d');
+    context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
   };
 
+  // Analyze the captured image for face detection
   const analyzeFace = async (imageSrc) => {
     const img = new Image();
     img.src = imageSrc;
     img.onload = async () => {
       const detections = await faceapi.detectAllFaces(img).withFaceLandmarks();
-      console.log('Detections:', detections); // Log all detections for debugging
-      
-      // Create a canvas to draw the detections
-      const canvas = document.createElement('canvas');
+
+      const canvas = canvasRef.current;
       const context = canvas.getContext('2d');
       canvas.width = img.width;
       canvas.height = img.height;
+
+      // Mirror the image on the canvas
+      context.translate(canvas.width, 0);
+      context.scale(-1, 1);
+
       context.drawImage(img, 0, 0);
 
-      // Draw the detections
       detections.forEach(detection => {
-        if (detection.detection.box && detection.landmarks) { // Check if box and landmarks exist
-          const box = detection.detection.box;
-          const landmarks = detection.landmarks.positions; // Access landmarks positions
-          context.strokeStyle = 'red';
-          context.lineWidth = 2;
-          context.strokeRect(box.x, box.y, box.width, box.height);
-          
-          landmarks.forEach(point => {
-            context.fillStyle = 'green';
-            context.fillRect(point.x, point.y, 5, 5);
-          });
-        } else {
-          console.warn('Detection does not have box or landmarks:', detection); // Log if something is missing
-        }
+        const box = detection.detection.box;
+        context.strokeStyle = 'red';
+        context.lineWidth = 2;
+        context.strokeRect(box.x, box.y, box.width, box.height);
       });
 
-      // Append the canvas to your UI (you can customize where to append)
-      document.body.appendChild(canvas);
+      context.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
     };
+  };
+
+  // Perform face detection on the live webcam feed
+  const detectFaceOnLiveFeed = async () => {
+    const webcamElement = webcamRef.current.video;
+    if (webcamElement && !webcamElement.paused) {
+      const detections = await faceapi.detectAllFaces(webcamElement).withFaceLandmarks();
+      
+      const canvas = liveCanvasRef.current;
+      const context = canvas.getContext('2d');
+      const { videoWidth, videoHeight } = webcamElement;
+      
+      canvas.width = videoWidth;
+      canvas.height = videoHeight;
+
+      // Mirror the canvas for the live feed
+      context.clearRect(0, 0, canvas.width, canvas.height); // Clear previous drawings
+      context.translate(canvas.width, 0);
+      context.scale(-1, 1); // Flip horizontally to match the mirrored webcam
+
+      // Draw face detection boxes
+      detections.forEach(detection => {
+        const box = detection.detection.box;
+        context.strokeStyle = 'red';
+        context.lineWidth = 2;
+        context.strokeRect(box.x, box.y, box.width, box.height);
+      });
+
+      context.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
+    }
   };
 
   useEffect(() => {
@@ -86,23 +113,39 @@ const Analyze = () => {
     checkWebcam();
   }, []);
 
+  // Run face detection on the live feed at intervals
+  useEffect(() => {
+    const interval = setInterval(() => {
+      detectFaceOnLiveFeed();
+    }, 100); // Run detection every 100ms
+    return () => clearInterval(interval); // Clean up on unmount
+  }, []);
+
   return (
     <div className="analyze-container">
       {isLoading && <p>Loading models...</p>} {/* Loading indicator */}
       <div className="media-container">
         {/* Webcam Feed */}
         {!capturedImage && (
-          <Webcam
-            audio={false}
-            ref={webcamRef}
-            screenshotFormat="image/jpeg"
-            videoConstraints={videoConstraints}
-            className={`webcam-feed mirrored`} // Add mirrored class
-          />
+          <>
+            <Webcam
+              audio={false}
+              ref={webcamRef}
+              screenshotFormat="image/jpeg"
+              videoConstraints={videoConstraints}
+              className="webcam-feed mirrored"
+            />
+            {/* Canvas for live face detection */}
+            <canvas ref={liveCanvasRef} className="face-canvas"></canvas>
+          </>
         )}
         {/* Captured Image */}
         {capturedImage && (
-          <img src={capturedImage} alt="Captured" className={`captured-image mirrored`} /> // Add mirrored class
+          <>
+            <img src={capturedImage} alt="Captured" className="captured-image" />
+            {/* Canvas for face detection on the captured image */}
+            <canvas ref={canvasRef} className="face-canvas"></canvas>
+          </>
         )}
       </div>
       <div className="button-container">
